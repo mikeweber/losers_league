@@ -24,11 +24,8 @@ class Week < ApplicationRecord
   has_many :picks
 
   class << self
-    def current_week
-      joins(:season, :matchups)
-        .where(seasons: { year: Season.maximum(:year) })
-        .where(matchups: { home_score: nil })
-        .maximum(:week)
+    def current_week(now = Time.now)
+      where(starts_at: ..(now + 2.days)).maximum(:week) || 1
     end
   end
 
