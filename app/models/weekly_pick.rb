@@ -3,11 +3,13 @@ require "active_model"
 class WeeklyPick
   include ActiveModel::Validations
 
-  attr_reader :user, :week
+  attr_reader :user, :week, :losing_team, :now
 
-  def initialize(user:, week:)
+  def initialize(user:, week:, losing_team: nil, now: Time.now)
     @user = user
     @week = week
+    @losing_team = losing_team
+    @now = now
   end
 
   def pick_loser!(losing_team)
@@ -28,16 +30,26 @@ class WeeklyPick
         week.picks.create!(user:, team: losing_team)
       end
     end
+    @losing_team = losing_team
+    true
+  end
+
+  def year
+    week.season.year
+  end
+
+  def week_num
+    week.week
+  end
+
+  def loser_id
+    @losing_team&.id
   end
 
   private
 
   def week_closed?
-    first_kickoff.past?
-  end
-
-  def first_kickoff
-    week.matchups.map(&:kickoff).min
+    week.picks_locked?(now)
   end
 
   def team_picked_previously?(team)

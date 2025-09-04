@@ -11,4 +11,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  root "schedule#index"
+
+  get "schedule/:year/:week", to: "schedule#index", as: :schedule
+  resource "picks"
 end

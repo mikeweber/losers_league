@@ -29,7 +29,7 @@ class Week < ApplicationRecord
     end
   end
 
-  def picks_locked?
-    matchups.any? { _1.kickoff.past? }
+  def picks_locked?(now = Time.now)
+    matchups.any? { _1.kickoff && _1.kickoff < now }
   end
 end

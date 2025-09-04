@@ -34,10 +34,14 @@ class Matchup < ApplicationRecord
   end
 
   def home_won?
+    return false if home_score.nil? || away_score.nil?
+
     home_score > away_score
   end
 
   def away_won?
+    return false if home_score.nil? || away_score.nil?
+
     away_score > home_score
   end
 end

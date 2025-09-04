@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_01_042338) do
     t.bigint "week_id", null: false
     t.bigint "home_id", null: false
     t.bigint "away_id", null: false
-    t.datetime "kickoff", null: false
+    t.datetime "kickoff"
     t.integer "home_score"
     t.integer "away_score"
     t.datetime "created_at", null: false
