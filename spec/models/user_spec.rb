@@ -2,10 +2,12 @@
 #
 # Table name: users
 #
-#  id         :bigint           not null, primary key
-#  email      :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                :bigint           not null, primary key
+#  email             :string           not null
+#  name              :string           not null
+#  secret_identifier :string           not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
 require 'rails_helper'
 

@@ -1,7 +1,5 @@
 class ScheduleController < ApplicationController
   def index
-    @now = Time.now
-
     @season = Season.find_by(year: params[:year] || Time.now.year)
     week_num = params[:week] || Week.current_week
 
@@ -12,9 +10,8 @@ class ScheduleController < ApplicationController
       matchup.home = teams[matchup.home_id]
       matchup.away = teams[matchup.away_id]
     end
-    @picks_allowed = true
-    user = User.first
-    pick = user.picks.find_or_initialize_by(week_id: @week.id)
-    @weekly_pick = WeeklyPick.new(user:, week: @week, losing_team: pick&.team, now: @now)
+    @picks_allowed = current_user.present? && !@week.picks_locked?(current_time)
+    pick = current_user.picks.find_or_initialize_by(week_id: @week.id) if current_user
+    @weekly_pick = WeeklyPick.new(user: current_user, week: @week, losing_team: pick&.team, now: current_time)
   end
 end

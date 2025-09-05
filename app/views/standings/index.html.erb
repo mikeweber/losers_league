@@ -1,0 +1,35 @@
+<h1>Standings</h1>
+
+<p><%= link_to("Schedule", schedule_path(@year, Week.current_week)) %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Loser</th>
+      <th>Correct picks</th>
+      <th>Incorrect picks</th>
+      <% @weeks.each do |week| %>
+        <th>Week <%= week.week %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr class="<%= "current_user" if user.id == current_user.id %>">
+        <td><%= user.name %></td>
+        <td><%= user.correct_picks_for(year: params[:year] || current_time.year).size %></td>
+        <td><%= user.strikes_for(year: params[:year] || current_time.year).size %></td>
+        <% @weeks.each do |week| %>
+          <% pick = week.picks.detect { |pick| pick.user == user } %>
+          <% matchup_class = "correct" if pick&.correct? %>
+          <% matchup_class = "incorrect" if pick&.incorrect? %>
+          <td class="<%= matchup_class %>">
+            <% if week.picks_locked?(current_time) %>
+              <%= week.picks.detect { |pick| pick.user == user }&.team&.initials %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

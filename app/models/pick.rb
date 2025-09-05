@@ -25,4 +25,20 @@ class Pick < ApplicationRecord
   belongs_to :user
   belongs_to :week
   belongs_to :team
+
+  def correct?
+    return false if matchup.nil?
+
+    matchup.home == team && matchup.away_won? || matchup.away == team && matchup.home_won?
+  end
+
+  def incorrect?
+    return false if matchup.nil?
+
+    matchup.home == team && matchup.home_won? || matchup.away == team && matchup.away_won?
+  end
+
+  def matchup
+    @matchup ||= week.matchups.detect { |matchup| [matchup.home, matchup.away].include?(team) }
+  end
 end

@@ -15,4 +15,6 @@ Rails.application.routes.draw do
 
   get "schedule/:year/:week", to: "schedule#index", as: :schedule
   resource "picks"
+
+  resources "standings"
 end

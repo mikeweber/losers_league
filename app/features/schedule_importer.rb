@@ -3,9 +3,12 @@ require "csv"
 class ScheduleImporter
   class << self
     def import_dir(path, year: Time.now.year)
-      Dir["#{path}/*.csv"].each do |csv_path|
-        parse_table(CSV.read(csv_path, headers: true), year:)
-      end
+      schedule_count =
+        Dir["#{path}/*.csv"].each do |csv_path|
+          parse_table(CSV.read(csv_path, headers: true), year:)
+        end.size
+
+      puts "Imported #{schedule_count} team schedules"
     end
 
     def parse_table(table, year:)

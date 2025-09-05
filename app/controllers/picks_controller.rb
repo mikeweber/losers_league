@@ -1,8 +1,6 @@
 class PicksController < ApplicationController
   def create
-    @now = Time.now
-
-    @season = Season.find_by(year: params[:weekly_pick][:year] || Time.now.year)
+    @season = Season.find_by(year: params[:weekly_pick][:year] || current_time.year)
     week_num = params[:weekly_pick][:week_num] || Week.current_week
 
     @week = @season.weeks.find_by(week: week_num)
@@ -12,10 +10,9 @@ class PicksController < ApplicationController
       matchup.home = teams[matchup.home_id]
       matchup.away = teams[matchup.away_id]
     end
-    @picks_allowed = true
-    user = User.first
-    pick = user.picks.find_or_initialize_by(week_id: @week.id)
-    @weekly_pick = WeeklyPick.new(user: User.first, week: @week, losing_team: pick.team, now: @now)
+    @picks_allowed = current_user.present? && !@week.picks_locked?(current_time)
+    pick = current_user.picks.find_or_initialize_by(week_id: @week.id) if current_user
+    @weekly_pick = WeeklyPick.new(user: current_user, week: @week, losing_team: pick&.team, now: current_time)
 
     losing_team = Team.find(params[:weekly_pick][:loser_id])
     if @weekly_pick.pick_loser!(losing_team)

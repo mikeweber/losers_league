@@ -8,3 +8,15 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+td.used_team {
+  background: #eee;
+}
+
+td.correct, td.winning_team {
+  background: green;
+}
+
+td.incorrect {
+  background: red;
+}

@@ -1,7 +1,16 @@
 <h1>Week <%= @week.week %> of <%= @season.year %></h1>
 
+<p><%= link_to("Standings", standings_path) %></p>
+
+<% if current_user %>
+  <p>Hello, <%= current_user.name %>.</p>
+<% end %>
+
 <p>
-  Picks are <%= @week.picks_locked?(@now) ? "locked" : "open" %> for this week.
+  Picks are <%= @week.picks_locked?(current_time) ? "locked" : "open" %> for this week.
+  <% unless @week.picks_locked?(current_time) %>
+    Your pick can be changed until the first kickoff of the week.
+  <% end %>
 </p>
 
 <% if @week.week > 1 %>
@@ -22,8 +31,8 @@ Week <%= @week.week %>
     <thead>
       <tr>
         <th>Kickoff</th>
-        <th colspan="3">Home</th>
-        <th colspan="3">Away</th>
+        <th colspan="<%= @picks_allowed ? 3 : 2 %>">Home</th>
+        <th colspan="<%= @picks_allowed ? 3 : 2 %>">Away</th>
       </tr>
     </thead>
     <tbody>
@@ -31,20 +40,24 @@ Week <%= @week.week %>
         <tr>
           <td><%= matchup.kickoff&.strftime("%b %d @ %l:%M") || "TBD" %></td>
 
-          <td>
-            <% if @picks_allowed %>
-              <%= form.radio_button(:loser_id, matchup.home_id, disabled: @week.picks_locked?(@now)) %>
-            <% end %>
-          </td>
-          <td class="<%= "winning_team" if matchup.home_won? %>"><%= form.label("loser_id_#{matchup.home_id}", matchup.home.initials) %></td>
+          <% disabled = @week.picks_locked?(current_time) %>
+          <% disabled ||= (current_user&.used_teams(year: @season.year) || []).any? { |team| team.id == matchup.home_id } %>
+          <% if @picks_allowed %>
+            <td class="<%= "used_team" if disabled %>">
+              <%= form.radio_button(:loser_id, matchup.home_id, disabled:) %>
+            </td>
+          <% end %>
+          <td class="<%= "used_team" if disabled %> <%= "winning_team" if matchup.home_won? %>"><%= form.label("loser_id_#{matchup.home_id}", matchup.home.initials) %></td>
           <td class="<%= "winning_team" if matchup.home_won? %>"><%= matchup.home_score %></td>
 
-          <td>
-            <% if @picks_allowed %>
-              <%= form.radio_button(:loser_id, matchup.away_id, disabled: @week.picks_locked?(@now)) %>
-            <% end %>
-          </td>
-          <td class="<%= "winning_team" if matchup.away_won? %>"><%= form.label("loser_id_#{matchup.away_id}", matchup.away.initials) %></td>
+          <% disabled = @week.picks_locked?(current_time) %>
+          <% disabled ||= (current_user&.used_teams(year: @season.year) || []).any? { |team| team.id == matchup.away_id } %>
+          <% if @picks_allowed %>
+            <td class="<%= "used_team" if disabled %>">
+              <%= form.radio_button(:loser_id, matchup.away_id, disabled:) %>
+            </td>
+          <% end %>
+          <td class="<%= "used_team" if disabled %> <%= "winning_team" if matchup.away_won? %>"><%= form.label("loser_id_#{matchup.away_id}", matchup.away.initials) %></td>
           <td class="<%= "winning_team" if matchup.away_won? %>"><%= matchup.away_score %></td>
         </tr>
       <% end %>
