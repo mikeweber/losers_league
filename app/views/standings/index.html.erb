@@ -24,8 +24,12 @@
           <% matchup_class = "correct" if pick&.correct? %>
           <% matchup_class = "incorrect" if pick&.incorrect? %>
           <td class="<%= matchup_class %>">
-            <% if week.picks_locked?(current_time) %>
-              <%= week.picks.detect { |pick| pick.user == user }&.team&.initials %>
+            <% if pick %>
+              <% if week.picks_locked?(current_time) %>
+                <%= pick.team.initials %>
+              <% else %>
+                [HIDDEN]
+              <% end %>
             <% end %>
           </td>
         <% end %>
