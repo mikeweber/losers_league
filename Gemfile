@@ -28,6 +28,8 @@ gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
 
+gem "csv"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -55,8 +57,6 @@ group :development, :test do
   gem "factory_bot_rails"
 
   gem "timecop"
-
-  gem "csv"
 end
 
 group :development do
