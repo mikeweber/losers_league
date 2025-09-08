@@ -47,8 +47,7 @@ Week <%= @week.week %>
               <%= form.radio_button(:loser_id, matchup.home_id, disabled:) %>
             </td>
           <% end %>
-          <% # team_logo_and_name = matchup.home.logo_url.present? ? image_tag(matchup.home.logo_url, alt: matchup.home.initials, width: 22) : "" %>
-          <% team_logo_and_name = "" %>
+          <% team_logo_and_name = matchup.home.logo_url.present? ? image_tag(matchup.home.logo_url, alt: matchup.home.initials, width: 22) : "" %>
           <% team_logo_and_name << " #{matchup.home.initials}" %>
           <td class="<%= "used_team" if disabled %> <%= "winning_team" if matchup.home_won? %>"><%= form.label("loser_id_#{matchup.home_id}", team_logo_and_name) %></td>
           <td class="<%= "winning_team" if matchup.home_won? %>"><%= matchup.home_score %></td>
@@ -60,8 +59,7 @@ Week <%= @week.week %>
               <%= form.radio_button(:loser_id, matchup.away_id, disabled:) %>
             </td>
           <% end %>
-          <% # team_logo_and_name = matchup.away.logo_url.present? ? image_tag(matchup.away.logo_url, alt: matchup.away.initials, width: 22) : "" %>
-          <% team_logo_and_name = "" %>
+          <% team_logo_and_name = matchup.away.logo_url.present? ? image_tag(matchup.away.logo_url, alt: matchup.away.initials, width: 22) : "" %>
           <% team_logo_and_name << " #{matchup.away.initials}" %>
           <td class="<%= "used_team" if disabled %> <%= "winning_team" if matchup.away_won? %>"><%= form.label("loser_id_#{matchup.away_id}", team_logo_and_name) %></td>
           <td class="<%= "winning_team" if matchup.away_won? %>"><%= matchup.away_score %></td>

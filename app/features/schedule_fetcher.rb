@@ -17,12 +17,12 @@ class ScheduleFetcher
         matchup.home_score = event.home.score
         matchup.away_score = event.away.score
       end
-      # if matchup.home.logo_url.blank? && event.home.logo_url.present?
-      #   matchup.home.update!(logo_url: event.home.logo_url)
-      # end
-      # if matchup.away.logo_url.blank? && event.away.logo_url.present?
-      #   matchup.away.update!(logo_url: event.away.logo_url)
-      # end
+      if matchup.home.logo_url.blank? && event.home.logo_url.present?
+        matchup.home.update!(logo_url: event.home.logo_url)
+      end
+      if matchup.away.logo_url.blank? && event.away.logo_url.present?
+        matchup.away.update!(logo_url: event.away.logo_url)
+      end
       matchup.save!
     end
   end
