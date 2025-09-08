@@ -38,7 +38,7 @@ end
   ["Los Angeles Chargers", "LAC"],
   ["Los Angeles Rams", "LAR"],
   ["Miami Dolphins", "MIA"],
-  ["Minnesota Vikings", "MN"],
+  ["Minnesota Vikings", "MIN"],
   ["New England Patriots", "NE"],
   ["New Orleans Saints", "NO"],
   ["New York Giants", "NYG"],
@@ -49,7 +49,7 @@ end
   ["Seattle Seahawks", "SEA"],
   ["Tampa Bay Buccaneers", "TB"],
   ["Tennessee Titans", "TEN"],
-  ["Washington Commanders", "WAS"],
+  ["Washington Commanders", "WSH"],
 ].each do |name, initials|
   Team.find_or_create_by!(name:, initials:)
 end

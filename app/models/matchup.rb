@@ -44,4 +44,8 @@ class Matchup < ApplicationRecord
 
     away_score > home_score
   end
+
+  def missing_score?(now = Time.now)
+    !final? && kickoff && kickoff + 3.hours < now
+  end
 end
