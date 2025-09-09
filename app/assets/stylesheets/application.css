@@ -13,10 +13,16 @@ td.used_team {
   background: #eee;
 }
 
-td.correct, td.winning_team {
+td.winning_team {
   background: green;
 }
 
+td.correct {
+  border: 3px solid green;
+  background: #8B8;
+}
+
 td.incorrect {
-  background: red;
+  border: 3px solid #933;
+  background: #C44;
 }

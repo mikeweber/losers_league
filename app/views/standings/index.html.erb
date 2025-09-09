@@ -6,26 +6,37 @@
   <thead>
     <tr>
       <th>Loser</th>
-      <th>Correct picks</th>
-      <th>Incorrect picks</th>
-      <% @weeks.each do |week| %>
-        <th>Week <%= week.week %></th>
+      <% @users.each do |user| %>
+        <th><%= user.name %></th>
       <% end %>
+    </tr>
+    <tr>
+      <th>Record</th>
+      <% @users.each do |user| %>
+        <th>
+          <%= user.correct_picks_for(year: params[:year] || current_time.year).size %>
+          -
+          <%= user.strikes_for(year: params[:year] || current_time.year).size %>
+        </th>
+      <% end %>
+    </tr>
+    <tr>
+      <th>Week</th>
+      <th colspan="<%= @users.size %>">Picks</th>
     </tr>
   </thead>
   <tbody>
-    <% @users.each do |user| %>
-      <tr class="<%= "current_user" if user.id == current_user&.id %>">
-        <td><%= user.name %></td>
-        <td><%= user.correct_picks_for(year: params[:year] || current_time.year).size %></td>
-        <td><%= user.strikes_for(year: params[:year] || current_time.year).size %></td>
-        <% @weeks.each do |week| %>
+    <% @weeks.each do |week| %>
+      <tr>
+        <td><%= week.week %></td>
+        <% @users.each do |user| %>
           <% pick = week.picks.detect { |pick| pick.user == user } %>
           <% matchup_class = "correct" if pick&.correct? %>
           <% matchup_class = "incorrect" if pick&.incorrect? %>
           <td class="<%= matchup_class %>">
             <% if pick %>
               <% if week.picks_locked?(current_time) %>
+                <%= image_tag(pick.team.logo_url, alt: pick.team.initials, width: 22) %>
                 <%= pick.team.initials %>
               <% else %>
                 [HIDDEN]
