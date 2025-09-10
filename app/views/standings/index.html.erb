@@ -35,8 +35,8 @@
           <% matchup_class = "incorrect" if pick&.incorrect? %>
           <td class="<%= matchup_class %>">
             <% if pick %>
-              <% if week.picks_locked?(current_time) %>
-                <%= image_tag(pick.team.logo_url, alt: pick.team.initials, width: 22) %>
+              <% if week.picks_locked?(current_time) || user == current_user %>
+                <%= image_tag(pick.team.logo_url, alt: pick.team.initials, title: pick.team.name, width: 22) %>
                 <%= pick.team.initials %>
               <% else %>
                 [HIDDEN]
