@@ -29,16 +29,24 @@ class Pick < ApplicationRecord
   def correct?
     return false if matchup.nil?
 
-    matchup.home == team && matchup.away_won? || matchup.away == team && matchup.home_won?
+    picked_home? && matchup.away_won? || picked_away? && matchup.home_won?
   end
 
   def incorrect?
     return false if matchup.nil?
 
-    matchup.home == team && matchup.home_won? || matchup.away == team && matchup.away_won?
+    picked_home? && matchup.home_won? || picked_away? && matchup.away_won?
+  end
+
+  def picked_home?
+    matchup.home_id == team_id
+  end
+
+  def picked_away?
+    matchup.away_id == team_id
   end
 
   def matchup
-    @matchup ||= week.matchups.detect { |matchup| [matchup.home, matchup.away].include?(team) }
+    @matchup ||= week.matchups.detect { |matchup| [matchup.home_id, matchup.away_id].include?(team_id) }
   end
 end

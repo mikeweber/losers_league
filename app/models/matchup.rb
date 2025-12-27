@@ -45,7 +45,15 @@ class Matchup < ApplicationRecord
     away_score > home_score
   end
 
+  def differential
+    (away_score - home_score).abs if final?
+  end
+
   def missing_score?(now = Time.now)
     !final? && kickoff && kickoff + 3.hours < now
+  end
+
+  def kickoff_str
+    kickoff&.strftime("%b %d @ %l:%M %p") || "TBD"
   end
 end

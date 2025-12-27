@@ -7,7 +7,19 @@
     <tr>
       <th>Loser</th>
       <% @users.each do |user| %>
-        <th><%= user.name %></th>
+        <th>
+          <%= user.name %><br />
+          <% status = @statuses[user.id] %>
+          <% if status.champion? %>
+            <span title="champion!">&#128081;</span>
+          <% elsif status.can_rebuy? %>
+            <span title="eligible for rebuy">&#128181;</span>
+          <% elsif status.eliminated? %>
+            <span title="eliminated"><%= status.losses > 0 && status.wins == @statuses[@users.last.id].wins ? "&#128169;".html_safe : "&#128683;".html_safe %></span>
+          <% else %>
+            <span title="still playing">&#127944;</span>
+          <% end %>
+        </th>
       <% end %>
     </tr>
     <tr>
@@ -26,7 +38,10 @@
     </tr>
   </thead>
   <tbody>
+    <% statuses = @users.to_h { |user| [user.id, SeasonStatus.new(season: @season, user:)] } %>
     <% @weeks.each do |week| %>
+      <% weekly_processor = WeeklyProcessor.new(week:, statuses: statuses) %>
+      <% weekly_processor.process!(skip_save: true) if weekly_processor.can_process? %>
       <tr>
         <td><%= week.week %></td>
         <% @users.each do |user| %>
@@ -37,10 +52,26 @@
             <% if pick %>
               <% if week.picks_locked?(current_time) || user == current_user %>
                 <%= image_tag(pick.team.logo_url, alt: pick.team.initials, title: pick.team.name, width: 22) %>
-                <%= pick.team.initials %>
+                <% matchup = pick.matchup %>
+                <% title = "#{matchup.away.initials}: #{matchup.away_score}, #{matchup.home.initials}: #{matchup.home_score}" if pick.matchup.final? %>
+                <% title ||= "#{matchup.away.initials} @ #{matchup.home.initials} (#{matchup.kickoff_str})" %>
+                <span title="<%= title %>"><%= pick.team.initials %></span>
               <% else %>
                 [HIDDEN]
               <% end %>
+            <% end %>
+            <% if params[:debug] %>
+              <% status = statuses[user.id] %>
+              <% if status.champion? %>
+                &#128081;
+              <% elsif status.can_rebuy? %>
+                &#128181;
+              <% elsif status.eliminated? %>
+                &#128683;
+              <% else %>
+                &#127944;
+              <% end %>
+              <%= "#{status.wins} - #{status.losses}" %>
             <% end %>
           </td>
         <% end %>

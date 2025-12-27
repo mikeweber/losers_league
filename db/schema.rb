@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_06_194456) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_27_184719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,6 +37,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_06_194456) do
     t.index ["team_id"], name: "index_picks_on_team_id"
     t.index ["user_id"], name: "index_picks_on_user_id"
     t.index ["week_id"], name: "index_picks_on_week_id"
+  end
+
+  create_table "season_statuses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "season_id", null: false
+    t.string "status", default: "playing", null: false
+    t.integer "processed_week", default: 0, null: false
+    t.integer "wins", default: 0, null: false
+    t.integer "losses", default: 0, null: false
+    t.boolean "took_rebuy", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_id"], name: "index_season_statuses_on_season_id"
+    t.index ["user_id", "season_id"], name: "index_season_statuses_on_user_id_and_season_id", unique: true
+    t.index ["user_id"], name: "index_season_statuses_on_user_id"
   end
 
   create_table "seasons", force: :cascade do |t|
@@ -76,5 +91,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_06_194456) do
   add_foreign_key "picks", "teams"
   add_foreign_key "picks", "users"
   add_foreign_key "picks", "weeks"
+  add_foreign_key "season_statuses", "seasons"
+  add_foreign_key "season_statuses", "users"
   add_foreign_key "weeks", "seasons"
 end

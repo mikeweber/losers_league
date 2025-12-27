@@ -32,4 +32,12 @@ class Week < ApplicationRecord
   def picks_locked?(now = Time.now)
     matchups.any? { _1.kickoff && _1.kickoff < now }
   end
+
+  def games_complete?
+    matchups.all? { _1.final? }
+  end
+
+  def final_week?
+    week == 18
+  end
 end

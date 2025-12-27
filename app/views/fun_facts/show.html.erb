@@ -1,0 +1,109 @@
+<h1><%= season.year %> Fun Facts</h1>
+
+<p>
+  <%= link_to("Schedule", schedule_path(season.year, Week.current_week)) %>
+  |
+  <%= link_to("Standings", standings_path) %>
+</p>
+
+<h2>Most original</h2>
+<p>
+  <b><%= fun_facts.most_original.map(&:first).to_sentence %></b>,
+  you were the most original picker<%= "s" if fun_facts.most_original.size > 1 %>,
+  and only picked the same team as others <%= fun_facts.most_original.first.last %> times!
+</p>
+
+<h2>Least original</h2>
+<p>
+  In contrast, <b><%= fun_facts.copies.map(&:first).to_sentence %></b>, were the least original, and
+  copied your neighbor's homework <%= fun_facts.copies.first.last %> times. Next year, blaze
+  your own trail!
+</p>
+
+<h3>Copies</h3>
+<p>Here's how often each person copied someone else's pick in the same week:</p>
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <% fun_facts.user_names.each do |user_name| %>
+        <th><%= user_name %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% fun_facts.user_names.each do |user_a| %>
+      <tr>
+        <td><%= user_a %></td>
+        <% fun_facts.user_names.each do |user_b| %>
+          <td><%= user_a == user_b ? "X" : fun_facts.duplicate_picks[user_a][user_b] %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if (super_fan = fun_facts.super_fan) %>
+  <h2>Super fan!</h2>
+  <p>
+    Instead of picking the team most likely to lose, it looks like
+    <b><%= super_fan[:name] %>'s</b> strategy was actually picking
+    <%= super_fan[:team_initials].to_sentence %> to win.
+    He did this <%= super_fan[:count] %> times!
+  </p>
+<% end %>
+
+<h3>Favorite teams</h3>
+<p>
+  Here are everyone's favorite teams to win:
+</p>
+<ul>
+  <% fun_facts.favorite_teams.sort_by { |_, f| [-f[:times], -f[:favorites].size] }.each do |user_name, faves| %>
+    <li><b><%=user_name %></b> picked <%= faves[:favorites].to_sentence %> to win <%= faves[:times] %> times<%= faves[:favorites].size > 1 ? " each!" : "." %></li>
+  <% end %>
+</ul>
+
+<h2>Let's go streaking!</h2>
+<p>
+  The longest winning streak is held by <b><%= fun_facts.winning_streakers[:names].to_sentence %></b>
+  and it lasted <%= fun_facts.winning_streakers[:count] %> weeks.
+</p>
+<p>
+  The longest losing streak is held by <b><%= fun_facts.losing_streakers[:names].to_sentence %></b>
+  and it lasted <%= fun_facts.losing_streakers[:count] %> weeks.
+</p>
+
+<h2>Living on the edge</h2>
+<p>
+  <b><%= fun_facts.living_on_the_edge[:records].keys.to_sentence %></b> picked matchups with the smallest
+  median point differential. That means half of the games were decided by
+  <%= fun_facts.living_on_the_edge[:median] %> points, or fewer! Of these nail-biters,
+  <% records = fun_facts.living_on_the_edge[:records].map do |user_name, record|
+    type = record[:wins] >= record[:losses] ? "winning" : "losing"
+    "#{user_name} had a #{type} record of #{record[:wins]} - #{record[:losses]}"
+  end %>
+  <%= records.to_sentence %>.
+</p>
+
+<h3>Median Scores</h3>
+<p>
+  Here's everyone median scores
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Median score</th>
+      <th>Record</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% fun_facts.median_records.sort_by { |_, record| record[:median] }.each do |user_name, record| %>
+      <tr>
+        <td><%= user_name %></td>
+        <td><%= record[:median] %></td>
+        <td><%= record[:wins] %> - <%= record[:losses] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
