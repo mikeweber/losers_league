@@ -9,9 +9,6 @@ class StandingsController < ApplicationController
     @weeks.each do |week|
       weekly_processor = WeeklyProcessor.new(week:, statuses: @statuses)
       weekly_processor.process! if weekly_processor.can_process?
-      @statuses.each do |user_id, status|
-        weekly_processor.rebuy!(user_id) if status.can_rebuy? && user_id != 1
-      end
     end
   end
 end

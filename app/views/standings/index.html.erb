@@ -58,10 +58,11 @@
             <% if pick %>
               <% if week.picks_locked?(current_time) || user == current_user %>
                 <%= image_tag(pick.team.logo_url, alt: pick.team.initials, title: pick.team.name, width: 22) %>
+                <% matchup_popover_id = "week_#{week.week}_user_#{user.id}" %>
                 <% matchup = pick.matchup %>
                 <% title = "#{matchup.away.initials}: #{matchup.away_score}, #{matchup.home.initials}: #{matchup.home_score}" if pick.matchup.final? %>
                 <% title ||= "#{matchup.away.initials} @ #{matchup.home.initials} (#{matchup.kickoff_str})" %>
-                <span title="<%= title %>"><%= pick.team.initials %></span>
+                <span popovertarget="matchup_popover" title="<%= title %>"><%= pick.team.initials %></span>
               <% else %>
                 [HIDDEN]
               <% end %>
@@ -85,3 +86,4 @@
     <% end %>
   </tbody>
 </table>
+<div id="matchup_popover" popover="auto"></div>
