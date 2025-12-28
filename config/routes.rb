@@ -17,5 +17,5 @@ Rails.application.routes.draw do
   resource "picks"
 
   resources "standings"
-  get "fun_facts/:year", to: "fun_facts#show"
+  get "fun_facts/:year", to: "fun_facts#show", as: :fun_facts
 end

@@ -1,6 +1,12 @@
 <h1>Week <%= @week.week %> of <%= @season.year %></h1>
 
-<p><%= link_to("Standings", standings_path) %></p>
+<p>
+  <%= link_to("Standings", standings_path) %>
+  <% if @weeks.any? { _1.final_week? && _1.games_complete? } %>
+    |
+    <%= link_to("Season fun facts", fun_facts_path(@year)) %>
+  <% end %>
+</p>
 
 <% if current_user %>
   <p>Hello, <%= current_user.name %>.</p>

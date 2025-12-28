@@ -1,6 +1,12 @@
 <h1>Standings</h1>
 
-<p><%= link_to("Schedule", schedule_path(@year, Week.current_week)) %></p>
+<p>
+  <%= link_to("Schedule", schedule_path(@year, Week.current_week)) %>
+  <% if @weeks.any? { _1.final_week? && _1.games_complete? } %>
+    |
+    <%= link_to("Season fun facts", fun_facts_path(@year)) %>
+  <% end %>
+</p>
 
 <table>
   <thead>
