@@ -14,8 +14,8 @@ class User < ApplicationRecord
 
   before_create :assign_secret_identifier
 
-  def correct_picks_for(year:)
-    picked_matchups_for(year:).select do |_week, matchup_and_pick|
+  def correct_picks_for(season_id:)
+    picked_matchups_for(season_id:).select do |_week, matchup_and_pick|
       matchup, pick = matchup_and_pick.values_at(:matchup, :pick)
       next unless matchup.final?
 
@@ -27,8 +27,8 @@ class User < ApplicationRecord
     end
   end
 
-  def strikes_for(year:)
-    picked_matchups_for(year:).select do |_week, matchup_and_pick|
+  def strikes_for(season_id:)
+    picked_matchups_for(season_id:).select do |_week, matchup_and_pick|
       matchup, pick = matchup_and_pick.values_at(:matchup, :pick)
       next unless matchup.final?
 
@@ -40,8 +40,8 @@ class User < ApplicationRecord
     end
   end
 
-  def used_teams(year:)
-    picked_matchups_for(year:).filter_map do |_week, matchup_and_pick|
+  def used_teams(season_id:)
+    picked_matchups_for(season_id:).filter_map do |_week, matchup_and_pick|
       matchup, pick = matchup_and_pick.values_at(:matchup, :pick)
       next unless matchup.final?
 
@@ -49,15 +49,15 @@ class User < ApplicationRecord
     end
   end
 
-  def picked_matchups_for(year:)
-    picks_for(year:).to_h do |pick|
+  def picked_matchups_for(season_id:)
+    picks_for(season_id:).to_h do |pick|
       [pick.week.week, { matchup: pick.week.matchups.detect { |matchup| [matchup.home, matchup.away].include?(pick.team) }, pick: }]
     end
   end
 
-  def picks_for(year:)
+  def picks_for(season_id:)
     @picks_for ||= {}
-    @picks_for[year] ||= picks.joins(week: :season).where(season: { year: })
+    @picks_for[season_id] ||= picks.joins(:week).where(season_id: season_id)
   end
 
   private

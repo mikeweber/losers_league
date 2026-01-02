@@ -11,4 +11,16 @@
 #
 class Team < ApplicationRecord
   has_many :picks
+
+  class << self
+    def preload_consts
+      return false if defined?(@consts_preloaded)
+
+      Team.all.each do |team|
+        const_set(team.initials, team)
+      end
+
+      @consts_preloaded = true
+    end
+  end
 end

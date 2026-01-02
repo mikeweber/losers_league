@@ -1,6 +1,7 @@
 class ScheduleController < ApplicationController
   def index
-    @season = Season.find_by(year: params[:year] || Time.now.year)
+    year = params[:year] || Season.maximum(:year)
+    @season = Season.find_by(year: year)
     week_num = params[:week] || Week.current_week
 
     @week = @season.weeks.find_by(week: week_num)
