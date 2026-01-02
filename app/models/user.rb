@@ -57,7 +57,7 @@ class User < ApplicationRecord
 
   def picks_for(season_id:)
     @picks_for ||= {}
-    @picks_for[season_id] ||= picks.joins(:week).where(season_id: season_id)
+    @picks_for[season_id] ||= picks.joins(:week).where(weeks: { season_id: season_id })
   end
 
   private

@@ -32,9 +32,9 @@
       <th>Record</th>
       <% @users.each do |user| %>
         <th>
-          <%= user.correct_picks_for(year: params[:year] || current_time.year).size %>
+          <%= user.correct_picks_for(season_id: @season.id).size %>
           -
-          <%= user.strikes_for(year: params[:year] || current_time.year).size %>
+          <%= user.strikes_for(season_id: @season.id).size %>
         </th>
       <% end %>
     </tr>
