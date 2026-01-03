@@ -21,7 +21,7 @@
           <% elsif status.can_rebuy? %>
             <span title="eligible for rebuy">&#128181;</span>
           <% elsif status.eliminated? %>
-            <span title="eliminated"><%= status.losses > 0 && status.wins == @statuses[@users.last.id].wins ? "&#128169;".html_safe : "&#128683;".html_safe %></span>
+            <span title="eliminated"><%= "&#128683;".html_safe %></span>
           <% else %>
             <span title="still playing">&#127944;</span>
           <% end %>
