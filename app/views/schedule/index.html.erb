@@ -48,7 +48,7 @@ Week <%= @week.week %>
           <td><%= matchup.kickoff_str %></td>
 
           <% disabled = @week.picks_locked?(current_time) %>
-          <% disabled ||= (current_user&.used_teams(year: @season.year) || []).any? { |team| team.id == matchup.away_id } %>
+          <% disabled ||= (current_user&.used_teams(season_id: @season.id) || []).any? { |team| team.id == matchup.away_id } %>
           <% if @picks_allowed %>
             <td class="<%= "used_team" if disabled %>">
               <%= form.radio_button(:loser_id, matchup.away_id, disabled:) %>
@@ -62,7 +62,7 @@ Week <%= @week.week %>
           <td>@</td>
 
           <% disabled = @week.picks_locked?(current_time) %>
-          <% disabled ||= (current_user&.used_teams(year: @season.year) || []).any? { |team| team.id == matchup.home_id } %>
+          <% disabled ||= (current_user&.used_teams(season_id: @season.id) || []).any? { |team| team.id == matchup.home_id } %>
           <% if @picks_allowed %>
             <td class="<%= "used_team" if disabled %>">
               <%= form.radio_button(:loser_id, matchup.home_id, disabled:) %>
