@@ -34,7 +34,7 @@ class Week < ApplicationRecord
   end
 
   def games_complete?
-    picks.all? { _1.matchup.final? }
+    matchups.any?(&:final?) && picks.all? { _1.matchup.final? }
   end
 
   def final_week?
