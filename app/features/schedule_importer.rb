@@ -1,5 +1,6 @@
 require "csv"
 
+# Builds a schedule from a CSV file
 class ScheduleImporter
   class << self
     def import_dir(path, year: Time.now.year)

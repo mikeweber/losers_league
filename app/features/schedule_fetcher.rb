@@ -1,9 +1,10 @@
+# Gets the matchups and scores for a given week number
 class ScheduleFetcher
-  attr_reader :endpoint, :week
+  attr_reader :endpoint, :week_num
 
-  def initialize(week:, endpoint_class: ESPN::Endpoint)
-    @week = week
-    @endpoint = endpoint_class.new(week: week.week)
+  def initialize(year:, week_num:, endpoint_class: ESPN::Endpoint)
+    @week_num = week_num
+    @endpoint = endpoint_class.new(year:, week: week_num)
   end
 
   def update_scores!
@@ -29,12 +30,20 @@ class ScheduleFetcher
 
   def matchups
     @matchups ||= week.matchups.each do |matchup|
-      matchup.home = teams[matchup.home_id]
-      matchup.away = teams[matchup.away_id]
+      matchup.home = teams_by_id[matchup.home_id]
+      matchup.away = teams_by_id[matchup.away_id]
     end.index_by { |m| "#{m.away.initials} @ #{m.home.initials}" }
   end
 
-  def teams
-    @teams ||= Team.all.index_by(&:id)
+  def teams_by_id
+    @teams_by_id ||= Team.all.index_by(&:id)
+  end
+
+  def week
+    @week ||= schedule_builder.weeks.detect { _1.week == week_num }
+  end
+
+  def schedule_builder
+    @schedule_builder ||= ScheduleBuilder.new(year: 2026)
   end
 end

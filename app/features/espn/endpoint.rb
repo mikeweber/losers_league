@@ -2,14 +2,17 @@ require "net/http"
 
 module ESPN
   class Endpoint
-    API_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+    API_URL = "https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
 
-    attr_reader :week, :failure_message
-    private attr_writer :week, :failure_message
+    attr_reader :year, :week, :failure_message
+    private attr_writer :year, :week, :failure_message
+    private attr_accessor :fetched_response
 
-    def initialize(week:)
+    def initialize(year:, week:, fetched_response: nil)
+      self.year = year
       self.week = week
       self.failure_message = nil
+      self.fetched_response = fetched_response
     end
 
     def events
@@ -35,7 +38,9 @@ module ESPN
     end
 
     def fetch
-      fetched_response = Net::HTTP.get_response(uri)
+      return fetched_response if fetched_response
+
+      self.fetched_response = Net::HTTP.get_response(uri)
 
       if fetched_response.is_a?(Net::HTTPSuccess)
         self.failure_message = nil
@@ -47,7 +52,7 @@ module ESPN
     end
 
     def uri
-      URI(API_URL + "?seasontype=2&week=#{week}")
+      URI(API_URL + "?year=#{year}&seasontype=2&week=#{week}")
     end
   end
 end
