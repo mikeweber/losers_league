@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe WeeklyPick do
-  let(:user) { FactoryBot.create(:user, email: "liamg@gmail.com") }
-  let(:user2) { FactoryBot.create(:user, email: "gary@gmail.com") }
+  let(:user) { FactoryBot.create(:user, email: "liamg@gmail.com", name: "Liam") }
+  let(:user2) { FactoryBot.create(:user, email: "gary@gmail.com", name: "Gary") }
 
   let(:season) { FactoryBot.create(:season, year: 2025) }
   let(:init_start_at) { Time.new(2025, 9, 4) }
