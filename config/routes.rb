@@ -18,4 +18,10 @@ Rails.application.routes.draw do
 
   resources "standings"
   get "fun_facts/:year", to: "fun_facts#show", as: :fun_facts
+
+  get "admin", to: "admin#overview"
+  get "admin/overview/:year", to: "admin#overview", as: :admin_overview
+  get "admin/new_season", to: "admin#new_season"
+  post "admin/import_season", to: "admin#import_season", as: :import_season
+  post "admin/import_week", to: "admin#import_week", as: :import_week
 end

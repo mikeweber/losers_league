@@ -51,13 +51,17 @@ class User < ApplicationRecord
 
   def picked_matchups_for(season_id:)
     picks_for(season_id:).to_h do |pick|
-      [pick.week.week, { matchup: pick.week.matchups.detect { |matchup| [matchup.home, matchup.away].include?(pick.team) }, pick: }]
+      [pick.week.week, { matchup: pick.week.matchups.detect { |matchup| [matchup.home_id, matchup.away_id].include?(pick.team_id) }, pick: }]
     end
   end
 
   def picks_for(season_id:)
     @picks_for ||= {}
-    @picks_for[season_id] ||= picks.joins(:week).where(weeks: { season_id: season_id })
+    @picks_for[season_id] ||= picks.joins(:week).preload(week: :matchups).where(weeks: { season_id: season_id })
+  end
+
+  def admin?
+    email == "mikepdubya@gmail.com"
   end
 
   private

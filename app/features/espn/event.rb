@@ -12,7 +12,7 @@ module ESPN
         home = ESPN::Team.parse_home(event_json)
         away = ESPN::Team.parse_away(event_json)
         status = event_json.dig("status", "type", "name")
-        kickoff = event_json.dig("status", "type", "shortDetail")
+        kickoff = event_json["date"] unless event_json.dig("status", "type", "shortDetail") == TBD
 
         new(week:, home:, away:, status:, kickoff:)
       end
@@ -40,7 +40,7 @@ module ESPN
     private
 
     def kickoff=(time)
-      return @kickoff = nil if time == TBD
+      return @kickoff = nil if time.nil? || time == TBD
 
       @kickoff = Time.parse(time)
     rescue

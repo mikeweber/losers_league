@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
 
     if params[:fake_time].blank?
       session[:fake_time] = nil
-    else
+    elsif Rails.env.development?
       session[:fake_time] = (@current_time = Time.parse(params[:fake_time])).to_i
     end
   end

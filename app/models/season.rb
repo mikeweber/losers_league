@@ -9,4 +9,9 @@
 #
 class Season < ApplicationRecord
   has_many :weeks
+  has_many :season_statuses
+
+  def current_week(now = Time.now)
+    weeks.where(starts_at: ..(now + 2.days)).maximum(:week) || 1
+  end
 end

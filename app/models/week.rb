@@ -23,12 +23,6 @@ class Week < ApplicationRecord
   has_many :matchups
   has_many :picks
 
-  class << self
-    def current_week(now = Time.now)
-      where(starts_at: ..(now + 2.days)).maximum(:week) || 1
-    end
-  end
-
   def picks_locked?(now = Time.now)
     matchups.any? { _1.kickoff && _1.kickoff < now }
   end

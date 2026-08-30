@@ -25,6 +25,8 @@
 #  fk_rails_...  (week_id => weeks.id)
 #
 class Matchup < ApplicationRecord
+  include Comparable
+
   belongs_to :week
   belongs_to :home, class_name: "Team"
   belongs_to :away, class_name: "Team"
@@ -55,5 +57,13 @@ class Matchup < ApplicationRecord
 
   def kickoff_str
     kickoff&.strftime("%b %d @ %l:%M %p") || "TBD"
+  end
+
+  def <=>(other)
+    if kickoff.nil? || other.kickoff.nil? || kickoff == other.kickoff
+      home <=> other.home
+    else
+      kickoff <=> other.kickoff
+    end
   end
 end

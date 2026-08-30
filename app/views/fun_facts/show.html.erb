@@ -1,7 +1,7 @@
 <h1><%= season.year %> Fun Facts</h1>
 
 <p>
-  <%= link_to("Schedule", schedule_path(season.year, Week.current_week)) %>
+  <%= link_to("Schedule", schedule_path(season.year, season.current_week(current_time))) %>
   |
   <%= link_to("Standings", standings_path) %>
 </p>

@@ -1,0 +1,21 @@
+<h1><%= @season.year %> Overview</h1>
+
+<h2>Imported weeks</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th>Matchups</th>
+      <th>Picks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @weekly_counts.each do |week, data| %>
+      <tr>
+        <td><%= link_to(week, schedule_path(@season.year, week)) %></td>
+        <td><%= data[:matchups] %></td>
+        <td><%= data[:picks] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

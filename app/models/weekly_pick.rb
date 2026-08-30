@@ -3,12 +3,12 @@ require "active_model"
 class WeeklyPick
   include ActiveModel::Validations
 
-  attr_reader :user, :week, :losing_team, :now
+  attr_reader :user, :week, :now
 
-  def initialize(user:, week:, losing_team: nil, now: Time.now)
+  def initialize(user:, week:, losing_team_id: nil, now: Time.now)
     @user = user
     @week = week
-    @losing_team = losing_team
+    @losing_team_id = losing_team_id
     @now = now
   end
 
@@ -30,7 +30,7 @@ class WeeklyPick
         week.picks.create!(user:, team: losing_team)
       end
     end
-    @losing_team = losing_team
+    @losing_team_id = losing_team.id
     true
   end
 
@@ -43,7 +43,7 @@ class WeeklyPick
   end
 
   def loser_id
-    @losing_team&.id
+    @losing_team_id
   end
 
   private

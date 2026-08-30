@@ -10,6 +10,8 @@
 #  updated_at :datetime         not null
 #
 class Team < ApplicationRecord
+  include Comparable
+
   has_many :picks
 
   class << self
@@ -22,5 +24,9 @@ class Team < ApplicationRecord
 
       @consts_preloaded = true
     end
+  end
+
+  def <=>(other)
+    initials <=> other.initials
   end
 end

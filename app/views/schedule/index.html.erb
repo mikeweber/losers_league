@@ -43,7 +43,7 @@ Week <%= @week.week %>
       </tr>
     </thead>
     <tbody>
-      <% @matchups.sort_by { _1.home.initials }.sort_by { _1.kickoff || Float::INFINITY }.each do |matchup| %>
+      <% @matchups.each do |matchup| %>
         <tr>
           <td><%= matchup.kickoff_str %></td>
 
