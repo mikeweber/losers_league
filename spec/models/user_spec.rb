@@ -4,6 +4,7 @@
 #
 #  id                :bigint           not null, primary key
 #  email             :string           not null
+#  is_admin          :boolean          default(FALSE), not null
 #  name              :string           not null
 #  secret_identifier :string           not null
 #  created_at        :datetime         not null
