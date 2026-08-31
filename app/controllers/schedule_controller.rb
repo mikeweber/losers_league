@@ -2,7 +2,7 @@ class ScheduleController < ApplicationController
   def index
     year = params[:year] || Season.maximum(:year)
     @season = Season.find_by(year: year)
-    week_num = params.fetch(:week, @season.current_week)
+    week_num = params.fetch(:week, @season.current_week(current_time))
 
     @week = @season.weeks.find_by(week: week_num)
     teams = Team.all.index_by(&:id)

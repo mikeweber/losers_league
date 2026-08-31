@@ -47,6 +47,12 @@ class Matchup < ApplicationRecord
     away_score > home_score
   end
 
+  def tie?
+    return false if home_score.nil? || away_score.nil?
+
+    away_score == home_score
+  end
+
   def differential
     (away_score - home_score).abs if final?
   end

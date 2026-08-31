@@ -29,7 +29,7 @@ class Pick < ApplicationRecord
   def correct?
     return false if matchup.nil?
 
-    picked_home? && matchup.away_won? || picked_away? && matchup.home_won?
+    picked_home? && matchup.away_won? || picked_away? && matchup.home_won? || matchup.tie?
   end
 
   def incorrect?

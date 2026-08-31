@@ -44,6 +44,7 @@
     </tr>
   </thead>
   <tbody>
+    <% # The following statuses variable is for debugging only %>
     <% statuses = @users.to_h { |user| [user.id, SeasonStatus.new(season: @season, user:)] } %>
     <% @weeks.each do |week| %>
       <% weekly_processor = WeeklyProcessor.new(week:, statuses: statuses) %>
@@ -60,8 +61,8 @@
                 <%= image_tag(pick.team.logo_url, alt: pick.team.initials, title: pick.team.name, width: 22) %>
                 <% matchup_popover_id = "week_#{week.week}_user_#{user.id}" %>
                 <% matchup = pick.matchup %>
-                <% title = "#{matchup.away.initials}: #{matchup.away_score}, #{matchup.home.initials}: #{matchup.home_score}" if pick.matchup.final? %>
-                <% title ||= "#{matchup.away.initials} @ #{matchup.home.initials} (#{matchup.kickoff_str})" %>
+                <% title = "#{matchup.away.initials}: #{matchup.away_score}, #{matchup.home.initials}: #{matchup.home_score}" if matchup&.final? %>
+                <% title ||= "#{matchup.away.initials} @ #{matchup.home.initials} (#{matchup.kickoff_str})" if matchup %>
                 <span popovertarget="matchup_popover" title="<%= title %>"><%= pick.team.initials %></span>
               <% else %>
                 [HIDDEN]

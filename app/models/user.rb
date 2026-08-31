@@ -18,33 +18,25 @@ class User < ApplicationRecord
   def correct_picks_for(season_id:)
     picked_matchups_for(season_id:).select do |_week, matchup_and_pick|
       matchup, pick = matchup_and_pick.values_at(:matchup, :pick)
-      next unless matchup.final?
+      next if matchup.nil? || !matchup.final?
 
-      if pick.team == matchup.home
-        matchup.away_won?
-      else
-        matchup.home_won?
-      end
+      pick.correct?
     end
   end
 
   def strikes_for(season_id:)
     picked_matchups_for(season_id:).select do |_week, matchup_and_pick|
       matchup, pick = matchup_and_pick.values_at(:matchup, :pick)
-      next unless matchup.final?
+      next if matchup.nil? || !matchup.final?
 
-      if pick.team == matchup.home
-        matchup.home_won?
-      else
-        matchup.away_won?
-      end
+      pick.incorrect?
     end
   end
 
   def used_teams(season_id:)
     picked_matchups_for(season_id:).filter_map do |_week, matchup_and_pick|
       matchup, pick = matchup_and_pick.values_at(:matchup, :pick)
-      next unless matchup.final?
+      next if matchup.nil? || !matchup.final?
 
       pick.team
     end

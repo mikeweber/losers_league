@@ -75,7 +75,10 @@ class WeeklyProcessor
   end
 
   def finalize_week!(skip_save:)
+    Rails.logger.info("Finalizing week #{week.week}")
     statuses.values.each do |status|
+      Rails.logger.info("Can't actually finalize week #{week.week}") unless status.can_process_week?(week.week)
+
       next unless status.can_process_week?(week.week)
 
       status.save_week!(week.week, skip_save:)
